@@ -57,4 +57,4 @@ class Futoshiki:
             if self.game[rel[0][0]][rel[0][1]] > self.game[rel[1][0]][rel[1][1]]:
                 return False
         return True
-
+#kodkoamdiwmpdamdpawoidmpawdmpaidmwpaidnpwiadnapidnpwiadndpa
