@@ -67,7 +67,7 @@
         <entry file="file://$PROJECT_DIR$/Futoshiki.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="561">
-              <caret line="60" column="27" selection-start-line="60" selection-start-column="27" selection-end-line="60" selection-end-column="27" />
+              <caret line="60" column="55" selection-start-line="60" selection-start-column="55" selection-end-line="60" selection-end-column="55" />
             </state>
           </provider>
         </entry>
@@ -188,12 +188,12 @@
       <updated>1554398793862</updated>
       <workItem from="1554398795221" duration="6996000" />
       <workItem from="1554465688550" duration="7604000" />
-      <workItem from="1554583592975" duration="3652000" />
+      <workItem from="1554583592975" duration="4038000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18252000" />
+    <option name="totallyTimeSpent" value="18638000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -353,7 +353,7 @@
     <entry file="file://$PROJECT_DIR$/Futoshiki.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
-          <caret line="60" column="27" selection-start-line="60" selection-start-column="27" selection-end-line="60" selection-end-column="27" />
+          <caret line="60" column="55" selection-start-line="60" selection-start-column="55" selection-end-line="60" selection-end-column="55" />
         </state>
       </provider>
     </entry>
