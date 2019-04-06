@@ -58,3 +58,4 @@ class Futoshiki:
                 return False
         return True
 #kodkoamdiwmpdamdpawoidmpawdmpaidmwpaidnpwiadnapidnpwiadndpa
+#fowjfowfwfnowfnofinqwpfoin
