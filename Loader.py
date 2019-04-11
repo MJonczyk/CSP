@@ -34,7 +34,7 @@ class Loader:
         dimension = int(data[0][0])
         constraints = np.empty((dimension, dimension))
 
-        for i in range(dimension):
+        for i in range(4):
             row = data[1 + i].split(';')
             constraint = []
             for j in range(dimension):

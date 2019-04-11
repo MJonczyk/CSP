@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 
 class Futoshiki:
@@ -7,6 +8,16 @@ class Futoshiki:
         self.game = game
         self.relations = relations
         self.solutions = []
+        self.backtracking_iterations = 0
+        self.backtracking_iterations_h = 0
+        self.forward_checking_iterations = 0
+        self.forward_checking_iterations_h = 0
+        self.indices = []
+        self.start_time = 0
+        for i in range(self.dimension):
+            for j in range(self.dimension):
+                self.indices.append([i, j, len(self.game[i][j].relations)])
+        self.indices.sort(key=lambda x: x[2], reverse=True)
 
     def game_solved(self):
         for i in range(self.dimension):
@@ -15,35 +26,18 @@ class Futoshiki:
                     return False
         return True
 
-    def available_row_values2(self, row):
-        values = np.arange(1, self.dimension + 1)
-        row_values = []
-        for i in range(self.dimension):
-            if self.game[row][i].value != 0:
-                row_values.append(self.game[row][i].value - 1)
-        return np.delete(values, row_values)
+    def init_time(self):
+        self.start_time = time.time()
 
     def available_row_values(self, row):
         values = np.arange(1, self.dimension + 1)
         r = [ri.value for ri in self.game[row]]
         return [v for v in values if v not in r]
 
-    def available_column_values2(self, column):
-        values = np.arange(1, self.dimension + 1)
-        column_values = []
-        for i in range(self.dimension):
-            if self.game[i][column].value != 0:
-                column_values.append(self.game[i][column].value - 1)
-        return np.delete(values, column_values)
-
     def available_column_values(self, column):
         values = np.arange(1, self.dimension + 1)
         c = [ri.value for ri in self.game.T[column]]
         return [v for v in values if v not in c]
-
-    def available_values2(self, row, column):
-        return np.intersect1d(np.intersect1d(self.available_row_values(row), self.available_column_values(column)),
-                              self.check_relations(row, column))
 
     def available_values(self, row, column):
         values = np.arange(1, self.dimension + 1)
@@ -94,14 +88,63 @@ class Futoshiki:
             for j in range(self.dimension):
                 if self.game[i][j].value == 0:
                     return i, j
-        return 0, 0
+        return -1, -1
 
-    def forward_checking(self):
+    def choose_square_heuristic(self):
+        for i in self.indices:
+            if self.game[i[0]][i[1]].value == 0:
+                return i[0], i[1]
+        return -1, -1
+
+    def backtracking(self):
+        self.backtracking_iterations = self.backtracking_iterations + 1
         if self.game_solved():
             self.solutions.append(np.copy(self.game))
             print(self.game_to_int())
-            print(self.game_solved_correctly())
             print("rozwiazanie")
+            print("solution time: " + str(time.time() - self.start_time))
+            return
+        r, c = self.choose_square()
+        # print(self.available_values(r, c).size)
+        # print(self.game)
+        if len(self.available_values(r, c)) == 0:
+            # print("no values")
+            return
+
+        for i in self.available_values(r, c):
+            self.game[r][c].value = i
+            self.backtracking()
+            self.game[r][c].value = 0
+        # print("koniec metody")
+
+    def backtracking_with_heuristic(self):
+        self.backtracking_iterations_h = self.backtracking_iterations_h + 1
+        if self.game_solved():
+            self.solutions.append(np.copy(self.game))
+            print(self.game_to_int())
+            print("rozwiazanie")
+            print("solution time: " + str(time.time() - self.start_time))
+            return
+        r, c = self.choose_square_heuristic()
+        # print(self.available_values(r, c).size)
+        # print(self.game_to_int())
+        if len(self.available_values(r, c)) == 0:
+            # print("no values")
+            return
+
+        for i in self.available_values(r, c):
+            self.game[r][c].value = i
+            self.backtracking_with_heuristic()
+            self.game[r][c].value = 0
+        # print("koniec metody")
+
+    def forward_checking(self):
+        self.forward_checking_iterations = self.forward_checking_iterations + 1
+        if self.game_solved():
+            self.solutions.append(np.copy(self.game))
+            print(self.game_to_int())
+            print("rozwiazanie")
+            print("solution time: " + str(time.time() - self.start_time))
             return
         r, c = self.choose_square()
         # print(self.available_values(r, c).size)
@@ -114,27 +157,29 @@ class Futoshiki:
         for i in self.available_values(r, c):
             self.game[r][c].value = i
             self.forward_checking()
-        self.game[r][c].value = 0
+            self.game[r][c].value = 0
         # print("koniec metody")
 
-    def backtracking(self):
+    def forward_checking_with_heuristic(self):
+        self.forward_checking_iterations_h = self.forward_checking_iterations_h + 1
         if self.game_solved():
             self.solutions.append(np.copy(self.game))
             print(self.game_to_int())
-            print(self.game_solved_correctly())
             print("rozwiazanie")
+            print("solution time: " + str(time.time() - self.start_time))
             return
-        r, c = self.choose_square()
+        r, c = self.choose_square_heuristic()
         # print(self.available_values(r, c).size)
-        # print(self.game)
-        if len(self.available_values(r, c)) == 0:
+        # print(self.game_to_int())
+        # print("elo")
+        if not self.not_empty_domains():
             # print("no values")
             return
 
         for i in self.available_values(r, c):
             self.game[r][c].value = i
-            self.backtracking()
-        self.game[r][c].value = 0
+            self.forward_checking_with_heuristic()
+            self.game[r][c].value = 0
         # print("koniec metody")
 
     def game_to_int(self):
