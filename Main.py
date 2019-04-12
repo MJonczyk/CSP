@@ -5,9 +5,9 @@ import time
 import numpy as np
 
 loader = Loader()
-(dimension, game, relations) = loader.load_futoshiki('research_data/test_futo_7_0.txt')
+(dimension, game, relations) = loader.load_futoshiki('research_data/test_futo_9_1.txt')
 futoshiki = Futoshiki(dimension, game, relations)
-(dimension, constraints) = loader.load_skyscrapper('research_data/test_sky_5_0.txt')
+(dimension, constraints) = loader.load_skyscrapper('research_data/test_sky_6_3.txt')
 skyscraper = Skyscrapper(dimension, constraints)
 
 """------------------------------------------------------------FUTOSHIKI---------------------------------------------"""
@@ -18,12 +18,12 @@ end = time.time()
 print("backtracking time: " + str(end - start))
 print("backtracking iterations: " + str(futoshiki.backtracking_iterations))
 
-start = time.time()
-futoshiki.init_time()
-futoshiki.backtracking_with_heuristic()
-end = time.time()
-print("backtracking_with_heuristic time: " + str(end - start))
-print("backtracking_with_heuristic iterations: " + str(futoshiki.backtracking_iterations_h))
+# start = time.time()
+# futoshiki.init_time()
+# futoshiki.backtracking_with_heuristic()
+# end = time.time()
+# print("backtracking_with_heuristic time: " + str(end - start))
+# print("backtracking_with_heuristic iterations: " + str(futoshiki.backtracking_iterations_h))
 
 start = time.time()
 futoshiki.init_time()
@@ -32,12 +32,12 @@ end = time.time()
 print("forward_checking time: " + str(end - start))
 print("forward_checking iterations: " + str(futoshiki.forward_checking_iterations))
 
-start = time.time()
-futoshiki.init_time()
-futoshiki.forward_checking_with_heuristic()
-end = time.time()
-print("forward_checking_with_heuristic time: " + str(end - start))
-print("forward_checking_with_heuristic iterations: " + str(futoshiki.forward_checking_iterations_h))
+# start = time.time()
+# futoshiki.init_time()
+# futoshiki.forward_checking_with_heuristic()
+# end = time.time()
+# print("forward_checking_with_heuristic time: " + str(end - start))
+# print("forward_checking_with_heuristic iterations: " + str(futoshiki.forward_checking_iterations_h))
 
 
 """------------------------------------------------------------SKYSCRAPER--------------------------------------------"""
@@ -47,21 +47,21 @@ print("forward_checking_with_heuristic iterations: " + str(futoshiki.forward_che
 # end = time.time()
 # print("backtracking time: " + str(end - start))
 # print("backtracking iterations: " + str(skyscraper.backtracking_iterations))
-#
+
 # start = time.time()
 # skyscraper.init_time()
 # skyscraper.backtracking_with_heuristic()
 # end = time.time()
 # print("backtracking_with_heuristic time: " + str(end - start))
 # print("backtracking_with_heuristic iterations: " + str(skyscraper.backtracking_iterations_h))
-#
+
 # start = time.time()
 # skyscraper.init_time()
 # skyscraper.forward_checking()
 # end = time.time()
 # print("forward_checking time: " + str(end - start))
 # print("forward_checking iterations: " + str(skyscraper.forward_checking_iterations))
-#
+
 # start = time.time()
 # skyscraper.init_time()
 # skyscraper.forward_checking_with_heuristic()

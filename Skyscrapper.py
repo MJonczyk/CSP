@@ -10,16 +10,29 @@ class Skyscrapper:
         self.game = np.zeros((dimension, dimension))
         self.solutions = []
         self.indices = []
+        self.values_counter = []
         self.start_time = 0
         self.backtracking_iterations = 0
         self.forward_checking_iterations = 0
         self.backtracking_iterations_h = 0
         self.forward_checking_iterations_h = 0
         for i in range(self.dimension):
+            self.values_counter.append([0, i + 1])
+        for i in range(self.dimension):
             for j in range(self.dimension):
-                self.indices.append([i, j, self.constraints[0][i] + self.constraints[1][i] + self.constraints[2][j]
-                                     + self.constraints[3][j]])
+                sum = 0
+                if self.constraints[0][j] != 0:
+                    sum = sum + 1
+                if self.constraints[1][j] != 0:
+                    sum = sum + 1
+                if self.constraints[2][i] != 0:
+                    sum = sum + 1
+                if self.constraints[3][i] != 0:
+                    sum = sum + 1
+                self.indices.append([i, j, sum])
+                # self.indices.append([i, j, self.constraints[0][j] + self.constraints[1][j] + self.constraints[2][i] + self.constraints[3][i]])
         self.indices.sort(key=lambda x: x[2], reverse=True)
+        # print(self.indices)
 
     def game_solved(self):
         for i in range(self.dimension):
@@ -118,6 +131,9 @@ class Skyscrapper:
                 return i[0], i[1]
         return -1, -1
 
+    def get_values_heuristic(self):
+        return sorted(self.values_counter, key=lambda x: x[0])
+
     def columns_valid(self, column):
         for i in range(0, column + 1):
             if not self.is_valid_lower(i):
@@ -134,27 +150,6 @@ class Skyscrapper:
                 return False
         return True
 
-    def helper_row(self):
-        for i in range(0, self.dimension):
-            x = Counter(self.game[i])
-            del x[0.0]
-            for key in x:
-                if x[key] != 1:
-                    return False
-        return True
-
-    def helper_column(self):
-        for i in range(0, self.dimension):
-            x = Counter(self.game.T[i])
-            del x[0.0]
-            for key in x:
-                if x[key] != 1:
-                    return False
-        return True
-
-    def unique_board(self):
-        return self.helper_column() and self.helper_row()
-
     def backtracking(self, row=0, column=0):
         self.backtracking_iterations = self.backtracking_iterations + 1
         if not self.rows_valid(row):
@@ -166,6 +161,7 @@ class Skyscrapper:
             print(self.game_to_int())
             print("rozwiazanie")
             print("solution time: " + str(time.time() - self.start_time))
+            print("iterations: " + str(self.backtracking_iterations))
             return
         r, c = self.choose_square()
 
@@ -186,13 +182,17 @@ class Skyscrapper:
             print(self.game_to_int())
             print("rozwiazanie")
             print("solution time: " + str(time.time() - self.start_time))
+            print("iterations: " + str(self.backtracking_iterations_h))
+            print(self.get_values_heuristic())
             return
         r, c = self.choose_square_heuristic()
 
-        for i in range(1, self.dimension + 1):
-            if self.is_valid(r, c, i):
-                self.game[r][c] = i
+        for i in self.get_values_heuristic():
+            if self.is_valid(r, c, i[1]):
+                self.game[r][c] = i[1]
+                self.values_counter[i[1] - 1][0] = self.values_counter[i[1] - 1][0] + 1
                 self.backtracking_with_heuristic(r, c)
+                self.values_counter[i[1] - 1][0] = self.values_counter[i[1] - 1][0] - 1
                 self.game[r][c] = 0
 
     def forward_checking(self):
@@ -202,6 +202,7 @@ class Skyscrapper:
             print(self.game_to_int())
             print("rozwiazanie")
             print("solution time: " + str(time.time() - self.start_time))
+            print("iterations: " + str(self.forward_checking_iterations))
             return
         r, c = self.choose_square()
 
@@ -219,14 +220,18 @@ class Skyscrapper:
             print(self.game_to_int())
             print("rozwiazanie")
             print("solution time: " + str(time.time() - self.start_time))
+            print("iterations: " + str(self.forward_checking_iterations_h))
+            print(self.get_values_heuristic())
             return
         r, c = self.choose_square_heuristic()
 
-        for i in range(1, self.dimension + 1):
-            if self.is_valid(r, c, i):
-                self.game[r][c] = i
+        for i in self.get_values_heuristic():
+            if self.is_valid(r, c, i[1]):
+                self.game[r][c] = i[1]
+                self.values_counter[i[1] - 1][0] = self.values_counter[i[1] - 1][0] + 1
                 if self.columns_valid(self.dimension - 1) and self.rows_valid(self.dimension - 1):
                     self.forward_checking_with_heuristic()
+                self.values_counter[i[1] - 1][0] = self.values_counter[i[1] - 1][0] - 1
                 self.game[r][c] = 0
 
     def game_to_int(self):
